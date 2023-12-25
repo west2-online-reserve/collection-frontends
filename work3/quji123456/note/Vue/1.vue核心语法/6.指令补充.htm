@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .red {
+      background-color: red;
+    }
+
+    .blue {
+      background-color: blue;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .large {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>指令补充</h1>
+
+
+  <h2>1.指令修饰符</h2>
+  <p>通过"."指明一些指令后缀,不同后缀封装了不同的处理结果,以达到简化代码的作用</p>
+
+  <h3>1.按键修饰符</h3>
+  <p>@keyup.enter -> 只会针对enter键的键入</p>
+
+  <h3>2.v-model修饰符</h3>
+  <p>v-model.trim -> 去除首尾空格</p> <!-- .trim() -->
+  <p>v-model.number -> 字符串转数字</p> <!-- e.stopPropagation  -->
+  <p>&nbsp;&nbsp;先输入其他字符，则之后的皆转为字符</p>
+  <p>&nbsp;&nbsp;先输入数字字符，则之后从输入其他字符开始皆无效</p>
+  <div class="box1">
+    <input v-model.number.trim="age" type="text"></input>
+    <p>age:{{age}}</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+  <script>
+    const preson = new Vue({
+      el: '.box1',
+      data: {
+        age: '',
+      },
+    })
+  </script>
+
+  <h3>3.事件修饰符</h3>
+  <p>@事件名.stop -> 阻止冒泡</p>
+  <p>@事件名.prevent -> 阻止默认行为</p>
+
+  <h2>2.v-bind对于样式控制的增强</h2>
+  <h3>动态操作class</h3>
+  <h4>语法1： :class="{类名1:布尔值,类名2:布尔值}"</h4>
+  <p>若布尔值为true,则有该类名</p>
+  <p>适用于来回切换一个类名</p>
+  <h4>语法2： :class="['类名1','类名2','类名3']"</h4>
+  <p>数组中所有类都会被添加到盒子上</p>
+  <p>适用于批量添加和删除类名</p>
+  <p><strong>注意加引号</strong></p>
+  <div class="box2">
+    <input v-model.number.trim="index" type="text"></input>
+    <div :class="{red:index==1,blue:index==2,yellow:index==3}">1->red; 2->blue; 3->yellow;</div>
+    <div :class="['large','yellow']">类名列表['large','yellow']</div>
+  </div>
+
+
+  <script>
+    const opt = new Vue({
+      el: '.box2',
+      data: {
+        index: '',
+      },
+    })
+  </script>
+  <h3>动态操作style</h3>
+  <p>语法： :style="{CSS属性名1:CSS属性值,CSS属性名2:CSS属性值}"</p>
+  <div class="box3">
+    <input v-model.number="size" type="text" value="16"></input>
+    <div :style="{fontSize:size+'px'}">输入框输入尺寸(单位:px)</div>
+
+  </div>
+  <script>
+    const opt2 = new Vue({
+      el: '.box3',
+      data: {
+        size: '',
+      },
+    })
+  </script>
+  <h2>3.v-model用于其他表单元素</h2>
+  <p>v-model会根据 控件类型 自动选取 正确的方法 来更新元素</p>
+  <h3>输入框input:text -> value</h3>
+  <h3>文本域textarea -> value</h3>
+  <h3>复选框input:checkbox -> checked</h3>
+  <p>复选框绑定的值是布尔值</p>
+  <h3>单选框input:radio -> checked</h3>
+  <p>要使用同值name</p>
+  <p>v-model绑定的属性也相同</p>
+  <p>最后所绑定的属性的值为所选中的value</p>
+  <h3>下拉菜单select -> value</h3>
+  <p>所绑定的属性的值为所选中的value</p>
+  <p>-------------------------------------------</p>
+  <div class="box4">
+    <input type="text" v-model="textvalue">
+    <p>textvalue:{{textvalue}}</p>
+    <textarea v-model="tavalue"></textarea>
+    <p>tavalue:{{tavalue}}</p>
+    <input type="checkbox" v-model="checkboxvalue">
+    <p>checkboxvalue:{{checkboxvalue}}</p>
+    <input type="radio" v-model="radiovalue" name="radiotest" value="I am the 1st.">
+    <input type="radio" v-model="radiovalue" name="radiotest" value="I am the 2nd.">
+    <input type="radio" v-model="radiovalue" name="radiotest" value="I am the 3rd.">
+    <p>radiovalue:{{radiovalue}}</p>
+    <select name="selecttest" id="selecttest" v-model="selectvalue">
+      <option value="select 1">111</option>
+      <option value="select 2">222</option>
+      <option value="select 3">333</option>
+      <option value="select 4">444</option>
+    </select>
+    <p>selectvalue:{{selectvalue}}</p>
+  </div>
+  <script>
+    const box4 = new Vue({
+      el: '.box4',
+      data: {
+        textvalue: '',
+        tavalue: '',
+        checkboxvalue: '',
+        radiovalue: '',
+        selectvalue: '',
+      },
+    })
+  </script>
+</body>
+
+</html>

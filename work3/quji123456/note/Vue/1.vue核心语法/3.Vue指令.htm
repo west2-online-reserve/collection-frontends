@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    li {
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>vue指令</h1>
+  <p>vue会根据不同的【指令】，针对标签实现不同的【功能】</p>
+  <p>指令：带有 v-前缀 的 特殊 标签属性</p>
+
+  <h2></h2>
+  <h3>1. v-html</h3>
+  <p id="box1" v-html="body">解析标签</p>
+
+
+  <h3>2. v-show 和 v-if</h3>
+  <p>控制显示隐藏</p>
+  <p>如果属性里的表达式为true则显示，为false则隐藏</p>
+
+  <p><strong>
+      区别：<br>
+      （1）v-show是通过将display改为none隐藏<br>
+      （2）v-if是直接移除元素
+    </strong></p>
+  <p>所以v-show适合频繁切换显示隐藏的场景；v-if适合不频繁切换的场景，要么显示，要么隐藏</p>
+  <div id="box2">
+    <p v-if="age<18">111</p>
+    <p v-else-if="age>=18&&age<30">222</p>
+    <p v-else-if="age>=30&&age<65">333</p>
+    <p v-else>444</p>
+  </div>
+
+
+  <h3>3. v-else 和 v-else-if</h3>
+  <p>辅助v-if进行判断渲染，需要紧挨着v-if使用</p>
+  <p>v-else无需跟属性值，v-else-if需要跟属性值</p>
+
+
+  <h3>4. v-on</h3>
+  <p>作用：注册事件 = 添加监听 + 处理逻辑</p>
+  <p>语法：<br>
+    (1)v-on:事件名="内联语句"
+
+    (2)v-on:事件名="methods中的函数名"
+
+    (3)简写: 将v-on:简写为@
+  </p>
+  <div id="box3">
+    <button v-on:click="count--">-</button>
+    <span>{{count}}</span>
+    <button @click="plus">+</button>
+  </div>
+
+
+
+  <h3>5. v-bind</h3>
+  <p>作用：动态设置标签属性</p>
+  <p>语法：v-bind:属性名="表达式"</p>
+  <p>可省略为 :属性名="表达式"</p>
+  <div id="box4">
+    <img v-bind:src="imgUrl" :title="imgTitle" style="width:100px;height:100px;">
+  </div>
+
+  <h3>6. v-for</h3>
+  <p>作用：基于数据循环，多次渲染整个元素</p>
+  <p>语法： v-for="(item,index) in 数组名"</p>
+  <p>不需要用到index时，可以只写一个参数，此时可省略括号</p>
+  <div id="box5">
+    <ul>
+      <li v-for="(item,index) in list">{{item}} {{index}}</li>
+    </ul>
+    <ul>
+      <li v-for="item in list">{{item}}</li>
+    </ul>
+  </div>
+  <h4>v-for中的key</h4>
+  <p>key属性="唯一标识"</p>
+  <p>给列表项添加唯一标识。便于Vue进行列表项的正确排序复用</p>
+  <p>原因：v-for的默认行为会尝试原地修改元素（就地复用）<br>
+    若进行数组元素删除操作，Vue只会删掉最后一个html元素，并将内容重新排序，而非删除真正与数组元素对应的html元素
+  </p>
+  <h5>注意点：（1）key的值只能是 字符串 和 数字<br>
+    （2）key的值必须具有唯一性（推荐使用id）
+  </h5>
+
+  <h3>7. v-model</h3>
+  <p>作用：给表单元素使用，双向数据绑定。实现快速 获取 或 设置 表单元素内容</p>
+  <p>将 数据 和 视图 绑定</p>
+  <div id="box6">
+    <input type="text" v-model="model">
+  </div>
+
+  <h3></h3>
+  <h3></h3>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+  <script>
+    const box1 = new Vue({
+      el: '#box1',
+      data: {
+        body: '<strong>---解析标签---</strong>'
+      }
+    })
+
+    const box2 = new Vue({
+      el: '#box2',
+      data: {
+        age: 19
+      }
+    })
+    const box3 = new Vue({
+      el: '#box3',
+      data: {
+        count: 0
+      },
+      methods: {
+        plus() {
+          // console.log(11111);
+          box3.count++
+        }
+      }
+    })
+
+    const box4 = new Vue({
+      el: '#box4',
+      data: {
+        imgUrl: '../素材/all.jpg',
+        imgTitle: 'all'
+      }
+    })
+
+    const box5 = new Vue({
+      el: '#box5',
+      data: {
+        list: [
+          '111',
+          '222',
+          '333',
+          '444',
+        ]
+      }
+    })
+
+    const box6 = new Vue({
+      el: '#box6',
+      data: {
+        model: '',
+      }
+    })
+  </script>
+
+</body>
+
+</html>

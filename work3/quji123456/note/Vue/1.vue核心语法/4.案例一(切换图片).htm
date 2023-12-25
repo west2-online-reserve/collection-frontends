@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #box img {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="box">
+    <button v-show="index>0" @click="index--">上一张</button><br>
+    <img :src="imgList[index]" :title="index" alt="无法显示"><br>
+    <button v-show="index<imgList.length-1" @click="index++">下一张</button>
+
+
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script>
+
+    const box = new Vue({
+      el: '#box',
+      data: {
+        index: 0,
+        imgUrl: '',
+        imgList: [
+          '../素材/男.png',
+          '../素材/女.png',
+          '../素材/all.jpg',
+          '../素材/bilibili.jpg'
+        ],
+      }
+    })
+  </script>
+</body>
+
+</html>

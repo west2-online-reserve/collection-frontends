@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h2>1.插值表达式</h2>
+  <p>1.作用：利用表达式（可以被求值的代码）进行插值，渲染到页面中</p>
+  <p>2.语法{{表达式}}</p>
+  <p>3.注意点：</p>
+  <p>（1）使用的数据必须存在于data内</p>
+  <p>（2）支持表达式，而非语句</p>
+  <p>（3）不能在标签属性中使用，只能用于显示给用户的文本中</p>
+
+  <div id="app">
+    {{uname}}
+    {{uname.toUpperCase()}}
+    {{friend.uname}}
+  </div>
+
+  <h2>2.响应式</h2>
+  <p>数据改变,视图自动更新</p>
+  <p>vue会监听数据是否修改，自动更新（vue帮助开发者进行dom操作）</p>
+
+
+  <h2>3.开发者工具</h2>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        uname: 'Leo',
+        friend: {
+          uname: 'Carey'
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>
