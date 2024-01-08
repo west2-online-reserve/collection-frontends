@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蟹老板的秘方</title>
+    <style>
+        /* 通用样式 */
+        *{
+            padding: 0;
+            margin:0;
+            /* 以border为可见边界 */
+            box-sizing:border-box;
+        }
+
+        /* 去除链接的下划线 */
+        a{
+            text-decoration: none;
+        }
+
+        /* 去除列表的基础样式 */
+        li{
+            list-style-type: none;
+        }
+        body{
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        .comp{
+            margin: 400px auto;
+
+            width: 600px;
+            height: 600px;
+
+            color: #333;
+            font-size: 24px;
+        }
+        .name_frame{
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .name_frame > li{
+            background-color:#598aa5;
+            width: 150px;
+            height: 60px;
+           
+            font-size: 32px;
+            text-align: center;
+            line-height: 60px;
+            color: aliceblue;
+
+        }
+        #info{
+            background-color:#DCF3FF;
+            width: 100%;
+            height: 100%;
+
+            padding: 32px;
+        }
+        .name_frame > .my_clicked{
+            background-color:#c3d7e3;    
+        }
+    </style>
+</head>
+<body>
+    <div class="comp">
+        <ul class="name_frame"> 
+            <li id="character01" class="my_clicked">二小姐</li>
+            <li id="character02">静可爱</li>
+            <li id="character03">一色</li>
+        </ul>
+        <div id="info">
+液氮系女子，不必说，她的冷酷言行足以在女孩子的社会里吹起绝对零度的暴风雪,表面看来是铜墙铁壁的完美美少女,但害怕狗、突然袭击的温柔、突发事故,这样算来弱点其实很多。
+        </div>
+    </div>
+
+    <script>
+    // 液氮系女子，不必说，她的冷酷言行足以在女孩子的社会里吹起绝对零度的暴风雪,表面看来是铜墙铁壁的完美美少女,但害怕狗、突然袭击的温柔、突发事故,这样算来弱点其实很多。
+    // 简直像是在为了获得现在最想结婚的女人NO1認号柱目前相平中的种叶拍羊与乐佳点差,休息日从白天就开始自斟自饮，说醉话。
+    // 扮演天然系而在男生中具有大人气的一年级女生，足球部经理。
+    document.addEventListener("DOMContentLoaded", function() {
+        //// 获取蓝框和红框以及按钮元素
+        //const character01 = document.getElementById('character01');
+        //const character02 = document.getElementById('character02');
+        //const character03 = document.getElementById('character03');
+        //const info = document.getElementById('info');
+
+        //// 鼠标移入蓝框时的操作
+        //character01.addEventListener('click', function() {
+        //    info.textContent = "液氮系女子，不必说，她的冷酷言行足以在女孩子的社会里吹起绝对零度的暴风雪,表面看来是铜墙铁壁的完美美少女,但害怕狗、突然袭击的温柔、突发事故,这样算来弱点其实很多";
+        //    character01.classList.add('my_clicked');
+        //    character02.classList.remove('my_clicked');
+        //    character03.classList.remove('my_clicked');
+        //});
+        //character02.addEventListener('click', function() {
+        //    info.textContent = "简直像是在为了获得现在最想结婚的女人NO1認号柱目前相平中的种叶拍羊与乐佳点差,休息日从白天就开始自斟自饮，说醉话。";
+        //    character01.classList.remove('my_clicked');
+        //    character02.classList.add('my_clicked');
+        //    character03.classList.remove('my_clicked');
+        //});        
+        //character03.addEventListener('click', function() {
+        //    info.textContent = "扮演天然系而在男生中具有大人气的一年级女生，足球部经理。";
+        //    character01.classList.remove('my_clicked');
+        //    character02.classList.remove('my_clicked');
+        //    character03.classList.add('my_clicked');
+        //});
+        const characters = document.querySelectorAll('.name_frame li');
+        const info = document.getElementById('info');
+    
+        characters.forEach(function(character) {
+            character.addEventListener('click', function() {
+                // 根据点击的角色来显示相应的信息
+                if (character.id === 'character01') {
+                    info.textContent = "液氮系女子，不必说，她的冷酷言行足以在女孩子的社会里吹起绝对零度的暴风雪,表面看来是铜墙铁壁的完美美少女,但害怕狗、突然袭击的温柔、突发事故,这样算来弱点其实很多";
+                } else if (character.id === 'character02') {
+                    info.textContent = "简直像是在为了获得现在最想结婚的女人NO1認号柱目前相平中的种叶拍羊与乐佳点差,休息日从白天就开始自斟自饮，说醉话。";
+                } else if (character.id === 'character03') {
+                    info.textContent = "扮演天然系而在男生中具有大人气的一年级女生，足球部经理。";
+                }
+    
+                // 设置选中角色的样式
+                characters.forEach(function(c) {
+                    c.classList.remove('my_clicked');
+                });
+                character.classList.add('my_clicked');
+            });
+        }); 
+    }); 
+
+    </script>
+</body>
+</html>
