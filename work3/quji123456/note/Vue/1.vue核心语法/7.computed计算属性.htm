@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    li {
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>computed计算属性</h1>
+  <p>概念:基于现有的数据,计算出来的新属性。依赖数据变化,自动重新计算。</p>
+  <p>语法：</p>
+  <p>计算属性名(){<br>
+    基于现有数据,编写求值逻辑<br>
+    return 结果<br>
+    }</p>
+  <p>1.声明在computed配置项中,一个计算属性对应一个函数形式</p>
+  <p>2.计算属性的使用和普通属性一样{{计算属性名}}</p>
+  <p>计算属性与函数不同之处在于:计算属性有缓存,下次读取时,只要数据不变,直接读缓存,性能高</p>
+  <div class="box">
+
+    <div>
+      <table>
+        <tr v-for="(item,index) in list">
+          <td>{{item.name}}</td>
+          <td><button @click="item.age--">-</button></td>
+          <td>{{item.age}}</td>
+          <td><button @click="item.age++">+</button></td>
+        </tr>
+      </table>
+
+
+
+    </div>
+    <p>平均年龄:{{averageAge}}</p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script>
+    const box = new Vue({
+      el: '.box',
+      data: {
+        list: [
+          { name: 'Leo', age: 19 },
+          { name: 'Carey', age: 18 },
+          { name: 'Gary', age: 20 }
+        ],
+        // result: this.averageAge,???读取result会失效
+      },
+      computed: {
+        averageAge() {
+          let sum = this.list.reduce((sum, item) => sum + item.age, 0)
+          return sum / this.list.length
+        }
+      },
+    })
+  </script>
+  <h2>"修改"计算属性</h2>
+  <p>计算属性默认的简写,只能读取访问,不能"修改"</p>
+  <p>如果要"修改",需要写计算属性的完整写法</p>
+  <p>
+    computed:{<br>
+    &emsp;计算属性名:{<br>
+    &emsp;&emsp;get(){<br>
+    &emsp;&emsp;&emsp;一段代码逻辑(计算逻辑)<br>
+    &emsp;&emsp;&emsp;return 结果<br>
+    &emsp;&emsp;},<br>
+    &emsp;&emsp;set(修改的值){<br>
+    &emsp;&emsp;&emsp;一段代码逻辑(修改逻辑)<br>
+    &emsp;&emsp;}<br>
+    &emsp;}<br>
+    }
+  </p>
+</body>
+
+</html>
