@@ -1,0 +1,90 @@
+@use './var.scss' as *;
+@use './mix.scss' as *;
+@include b(pagination){
+    display: flex;
+    align-items: center;
+    height: 32px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    font-size: 14px;
+    .el-select{
+        width:120px;
+        margin:0 20px;
+    }
+}
+@include b(pager){
+    user-select: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    li{
+        width: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        line-height: 14px;
+        min-width: 12px;
+        height: 32px;
+        line-height: 32px;
+        color:$text-color-primary;
+        background: white;
+        padding: 0 4px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        text-align: center;
+        box-sizing: border-box;
+        @include when(active){
+        color: $color-primary;
+    }
+    }
+    li:hover{
+        color: $color-primary;
+    }
+    
+}
+@include b(btn){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    min-width: 32px;
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    color: $text-color-primary;
+    background: white;
+    padding: 0 4px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    @include e(prev){
+        margin-right: 8px;
+    }
+    @include e(next){
+        margin-left: 8px;
+    }
+    @include when(disabled){
+        cursor: not-allowed;
+        color: $text-color-regular;
+    }
+    @include when(active){
+        color: $color-primary;
+    }
+    :hover
+    {
+        color: $color-primary;
+    }
+}
+@include b(jump){
+    margin-left:10px;
+    .el-input{
+        width: 40px;
+        margin:0 6px;
+    }
+}

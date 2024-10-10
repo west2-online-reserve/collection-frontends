@@ -1,0 +1,17 @@
+@use './var.scss' as *;
+@use './mix.scss' as *;
+
+@include b(checkbox) {
+    cursor: pointer;
+    margin: 8px;
+  @include e(input){
+    cursor: pointer;
+    position: relative;
+    margin-right: 5px;
+  }
+  @include e(label){
+    cursor: pointer;
+    color:$color-primary
+    }
+
+}

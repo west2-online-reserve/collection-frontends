@@ -1,0 +1,66 @@
+@use './var.scss' as *;
+@use './mix.scss' as *;
+
+@include b(button) {
+  // BEM规范
+  align-items: center;
+  display: inline-flex;
+  cursor: pointer;
+  outline: none;
+  border: #fafafa;
+  border-radius: 5px;
+  user-select: none;
+  min-height: 40px;
+  line-height: 1;
+  vertical-align: middle;
+  padding: 0 20px;
+
+  @include m(medium) {
+    padding: 0 20px;
+  }
+
+  @include m(small) {
+    padding: 0 18px;
+  }
+
+  @include m(large) {
+    padding: 0 25px;
+  }
+
+  @include when(disabled) {
+    // 针对不同类型处理
+    &,
+    &:hover,
+    &:focus {
+      cursor: not-allowed;
+      background-color: currentColor; // 使用currentColor保持颜色不变
+      border-color: currentColor; // 假设边框颜色和文本颜色一致
+      // opacity: 0.5; // 可选，增加不透明度以表现出禁用状态
+    }
+  }
+
+  @include when(round) {
+    border-radius: 20px;
+  }
+
+  @include m(primary) {
+    //渲染不同类型的button
+    @include button-variant($color-white, $color-primary, $color-primary);
+  }
+
+  @include m(success) {
+    @include button-variant($color-white, $color-success, $color-success);
+  }
+
+  @include m(warning) {
+    @include button-variant($color-white, $color-warning, $color-warning);
+  }
+
+  @include m(danger) {
+    @include button-variant($color-white, $color-danger, $color-danger);
+  }
+
+  @include m(info) {
+    @include button-variant($color-white, $color-info, $color-info);
+  }
+}

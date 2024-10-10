@@ -1,0 +1,64 @@
+@use 'config' as *;
+@forward 'config';
+
+// .z-button{}
+@mixin b($block) {
+  $B: $namespace + '-' + $block;
+
+  .#{$B} {
+    @content;
+  }
+}
+
+// .z-button.is-desiabled
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+// &--primary => .z-button--primary
+@mixin m($modifier) {
+  @at-root {
+    #{& + $modifier-separator + $modifier} {
+      @content;
+    }
+  }
+}
+
+// &__header  => .z-button__header
+@mixin e($element) {
+  @at-root {
+    #{& + $element-separator + $element} {
+      @content;
+    }
+  }
+}
+
+@mixin button-variant($color, $background-color, $border-color) {
+  color: $color;
+  background: $background-color;
+  border-color: $border-color;
+  &:hover {
+    background-color: lighten($background-color, 10%);
+  }
+  &:active {
+    background-color: darken($background-color, 10%);
+  }
+
+  &.disabled,
+  &:disabled {
+    cursor: not-allowed;
+    background-color: lighten($background-color, 10%);
+    color: $color;
+    border-color: $border-color;
+    &:hover,
+    &:active {
+      background-color: $background-color;
+      color: $color;
+      border-color: $border-color;
+    }
+  }
+}
