@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端作业1</title>
+    <link rel="stylesheet" type="text/css" href="web.css"/>
+</head>
+<body>
+    <div>
+        <a href="#section1" class="left">人物介绍</a>
+        <a href="#section2" class="center">系列作品</a>
+        <a href="#section3" class="right">我们相关</a>
+        <!-- 创建三个可点击跳转的导航栏 -->
+        <div class="arc-border"><!--创建一个圆弧边框，内含文字和一个图片。-->
+            <img src="img/all.jpeg" id="all">
+            <div id="js">
+                海绵宝宝是一只黄色的方形海绵，住在太平洋深处风光优美无人知道的比基尼海滩水域下。那里是一个没有忧愁的世界，住着一群快乐的海洋生物。
+            </div>
+        </div>
+        <div>
+            <div id="hmbb"><!--创建海绵宝宝、派大星、章鱼哥的简介-->
+                <a name="section1"></a>
+                <h1 class="bt1">海绵宝宝</h1>
+                <p class="wz1">是动画片《海绵宝宝》系列中的主角，超级活泼可爱，给人带来快乐。</p>
+            </div>
+            <div id="pdx">
+                <h1 class="bt1">派大星</h1>
+                <p class="wz1">粉色的海星，很可爱，和海绵宝宝交情最好。</p>
+            </div>
+            <div id="zyg">
+                <h1 class="bt1">章鱼哥</h1>
+                <p class="wz1">大鼻子章鱼，对艺术有执着的追求，本质上是一个善良且有正义感的章鱼。</p>
+            </div>
+            <!-- 添加海绵宝宝、派大星、章鱼哥的图片 -->
+            <img src="img/haimianbaobao.jpeg" id="haimianbaobao">
+            <img src="img/paidaxing.jpeg" id="paidaxing">
+            <img src="img/zhangyuge.jpeg" id="zhangyuge">
+        </div>
+        <div id="bg"><!--创建一个表格为海绵宝宝的日期和集数-->
+            <a name="section2"></a>
+            <table id="tb">
+                <thead>
+                    <tr>
+                        <th>系列</th>
+                        <th>日期</th>
+                        <th>集数</th>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                    <tr>
+                        <td>海绵宝宝</td>
+                        <td>2008年10月23日</td>
+                        <td>60集</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="bk"><!--创建一个边框内可输入对我们的建议-->
+            <a name="section3"></a>
+            <br>
+            <form>
+                <label for="name">对我们建议</label>
+                <input type="text" id="name" name="name" placeholder="对我们建议">
+            </form>
+        </div>
+        <div id="tj"><!--创建一个虚拟提交按钮-->
+            <p id="wz2">提交</p>
+        </div>
+    </div>
+    
+</body>
+</html>

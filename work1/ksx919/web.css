@@ -1,0 +1,153 @@
+body{
+    background-color: #ccffff;/*创建背景颜色*/
+}
+.center{
+    color:#000;/*字体颜色设置为黑色*/
+    position:absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 30px;
+    text-decoration:none;
+}/*将“系列作品”居中放在准确的位置*/
+.left {
+    color:#000;
+    position: absolute;
+    left: 200px;
+    top: 30px;
+    text-decoration:none;
+}/*将“人物介绍”放在左边*/
+.right{
+    color:#000;
+    position: absolute;
+    right: 200px;
+    top: 30px;
+    text-decoration:none;
+}/*将“我们相关”放在右边*/
+.arc-border {
+    position:absolute;
+    top:80px;
+    left:200px;
+    width: 1136px;
+    height: 200px;
+    border: 2px solid #0000ff;
+    border-radius: 50px;/* 圆形裁切 */
+}/*设置边框数据*/
+#all{
+    padding:25px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* 圆形裁切 */
+    float: left; /* 使图片浮动到左侧 */
+    margin-right: 1px; /* 图片与文本之间的间距 */
+}
+#js{
+    overflow: hidden;
+    padding-top: 75px;
+}/*设置边框内字体数据*/
+#hmbb{
+    position:absolute;
+    top: 300px;
+    left:200px;
+    height: 150px;
+    width: 300px;
+    border-radius: 50px;
+    border: 2px solid rgb(250, 208, 57);
+    background-color: rgb(250, 208, 57);
+}/*设置海绵宝宝的简介数据*/
+#pdx{
+    position:absolute;
+    top: 300px;
+    left: 618px;
+    height: 150px;
+    width: 300px;
+    border-radius: 50px;
+    border: 2px solid rgb(208, 128, 120);
+    background-color: rgb(208, 128, 120);
+}/*设置派大星的简介数据*/
+#zyg{
+    position:absolute;
+    top: 300px;
+    left:1036px;
+    height: 150px;
+    width: 300px;
+    border-radius: 50px;
+    border: 2px solid rgb(109, 141, 164);
+    background-color: rgb(109, 141, 164);
+}/*设置章鱼哥的简介数据*/
+.bt1{
+    text-align: center;
+    color:white;
+    font-size: 20px;
+}/*设置简介中标题的格式*/
+.wz1{
+    color:white;
+    font-size: 18px;
+    padding-left:8px;
+}/*设置简介中文字的格式*/
+#haimianbaobao{
+    position:absolute;
+    top:475px;
+    left:200px;
+    height: 300px;
+    width: 300px;
+    border-radius: 50px;
+}/*设置海绵宝宝图片格式*/
+#paidaxing{
+    position:absolute;
+    top:475px;
+    left:618px;
+    height: 300px;
+    width: 300px;
+    border-radius: 50px;
+}/*设置派大星图片格式*/
+#zhangyuge{
+    position:absolute;
+    top:475px;
+    left:1036px;
+    height: 300px;
+    width: 300px;
+    border-radius: 50px;
+}/*设置章鱼哥图片格式*/
+#bg{
+    position:absolute;
+    top:800px;
+    left:200px;
+}/*设置表格的位置*/
+td:nth-child(1) {
+    background-color: rgb(242, 0, 255); /* 设置背景颜色 */
+    width: 636px;
+    text-align: center;
+}/*设置表格第一列的颜色和宽度*/
+td:nth-child(2) {
+    background-color: lightblue; /* 设置背景颜色 */
+    width:400px;
+    text-align: center;
+}/*设置表格第二列的颜色和宽度*/
+td:nth-child(3) {
+    background-color: rgb(175, 230, 173); /* 设置背景颜色 */
+    width:100px;
+    text-align: center;
+}/*设置表格第三列的颜色和宽度*/
+#bk{
+    position:absolute;
+    top: 1050px;
+    left: 200px;
+    width: 1136px;
+    height:200px;
+    border: 2px solid #0000ff;
+    border-radius: 25px;
+}/*设置给我们建议一栏的边框*/
+#tj{
+    position:absolute;
+    top:1300px;
+    right: 200px;
+    width:100px;
+    height:50px;
+    border:#0000ff;
+    border-radius: 10px;
+    background-color: #0000ff;
+}/*设置提交按钮的边框*/
+#wz2{
+    color:white;
+    text-align: center;/*居中*/
+}/*设置提交按钮的文字*/
