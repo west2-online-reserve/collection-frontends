@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- 
+    1.准备容器
+    2.引包
+    3.创建实例
+    4.添加配置项
+   -->
+
+
+  <div id="app">
+    <!-- 将用来编写一些用于渲染的代码逻辑 -->
+    {{msg}}
+  </div>
+  <!-- 
+      引入的是学习版本 
+      包含完整注释和警告
+    -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+  <script>
+    //一旦引入核心包,在全局环境,就有了vue构造函数
+    //可以创建示例
+    const app = new Vue({
+      //el配置选择器
+      el: '#app',
+      //通过data提供数据
+      data: {
+        msg: 12313
+      }
+    })
+
+  </script>
+</body>
+
+</html>
