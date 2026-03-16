@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width" , user-scalable="no" , inital-scale="1.0" , maximum-scale="1.0"
+    ,minimum-scale="1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    body {
+      background-color: white;
+    }
+
+    h1 {
+      /* width: 150px; */
+      padding: -2px 10px;
+      height: 50px;
+      margin: 20px 0 20px 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      background-color: #1a73e8;
+      border-radius: 5px;
+      line-height: 50px;
+      color: white;
+    }
+
+    #box {
+      width: 200px;
+      height: 200px;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      background-color: rgb(255, 255, 255);
+      border-radius: 10px;
+    }
+
+    #box .input {
+      margin: 15px auto 5px;
+      width: 170px;
+      height: 25px;
+      border: 2px solid #8ab4f8;
+      border-radius: 3px;
+    }
+
+    #box .input input {
+      float: left;
+      padding-left: 5px;
+      width: 125px;
+      height: 22px;
+      line-height: 28px;
+      border: 1px solid transparent;
+      font-size: 17px;
+      outline: 0;
+      color: #1a73e8;
+
+    }
+
+    /* #box .input input:focus {
+      border: 1px solid transparent;
+    } */
+
+    #box .input button {
+      float: right;
+      /* width: 30px; */
+      height: 25px;
+      padding: 0 4px 0 6px;
+      border: none;
+      background-color: #1a73e8;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    #box ul li {
+      width: 167px;
+      height: 20px;
+      margin: 0 auto 5px;
+      padding: 3px;
+      text-align: left;
+      /* border: 1px solid #000; */
+      background-color: #c1d6f0;
+      color: #1a73e8;
+
+    }
+
+    #box ul li strong {
+      display: inline-block;
+      width: 145px;
+      /* 单行显示 */
+      white-space: nowrap;
+      /* 隐藏溢出 */
+      /* overflow: hidden; */
+      overflow: auto;
+      /* 溢出省略号显示 */
+      /* text-overflow: ellipsis; */
+    }
+
+    #box ul li strong::-webkit-scrollbar {
+      display: none;
+    }
+
+    #box ul li button {
+      float: right;
+      width: 20px;
+      height: 20px;
+      line-height: 18px;
+      text-align: center;
+      background-color: #8ab4f8;
+      border: 1px solid #8ab4f8;
+      border-radius: 2px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>记事本</h1>
+  <div id="box">
+    <div class="input">
+      <input type="text" v-model.trim="userInput" @keyup.enter="add">
+      <button @click="add">ADD</button>
+    </div>
+
+    <ul>
+      <li v-for="(item,index) in list"><strong>{{index+1}}. {{item.content}}</strong><button
+          @click="del(item.id)">✖</button></li>
+
+    </ul>
+  </div>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script>
+    if (!localStorage.getItem('img_list')) { localStorage.setItem('img_list', JSON.stringify([])) }
+    // localStorage.setItem('img_list', JSON.stringify([{ 'id': '0', 'content': '例子' }]))
+    const box = new Vue({
+      el: '#box',
+      data: {
+        userInput: '',
+        list: JSON.parse(localStorage.getItem('img_list')),
+      },
+      methods: {
+        add() {
+          if (this.userInput !== '') {
+            this.list.unshift({
+              id: +new Date(),
+              content: this.userInput,
+            })
+            localStorage.setItem('img_list', JSON.stringify(this.list))
+            this.userInput = ''
+          }
+
+        },
+        del(id) {
+          this.list = this.list.filter(item => item.id !== id)
+          localStorage.setItem('img_list', JSON.stringify(this.list))
+
+        }
+      }
+    })
+
+  </script>
+</body>
+
+</html>
