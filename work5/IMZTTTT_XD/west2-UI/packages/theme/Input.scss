@@ -1,0 +1,32 @@
+.w-input {
+  border: 1px solid;
+}
+
+.w-input__inner {
+  width: 100%;
+  flex-grow: 1;
+  font-size: inherit;
+  padding: 0;
+  outline: none;
+  border: none;
+  background: none;
+  box-sizing: border-box;
+}
+
+.w-input--small {
+  font-size: 12px;
+  border-color: red;
+  padding: 6px 8px;
+}
+
+.w-input--medium {
+  font-size: 14px;
+  border-color: yellow;
+  padding: 8px 10px;
+}
+
+.w-input--large {
+  font-size: 16px;
+  border-color: green;
+  padding: 10px 12px;
+}

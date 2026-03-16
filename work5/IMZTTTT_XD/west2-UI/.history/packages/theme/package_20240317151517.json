@@ -1,0 +1,7 @@
+{
+  "name": "@west2ui/theme",
+  "version": "0.0.1",
+  "description": "自己design的组件库组件",
+  "main": "index.css",
+  "scripts": {}
+}

@@ -1,0 +1,65 @@
+@use 'config' as *;
+@forward 'config';
+
+// .z-button{}
+@mixin b($block) {
+  $B: $namespace + '-' + $block;
+
+  .#{$B} {
+    @content;
+  }
+}
+
+// .z-button.is-desiabled
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+// &--primary => .z-button--primary
+@mixin m($modifier) {
+  @at-root {
+    #{& + $modifier-separator + $modifier} {
+      @content;
+    }
+  }
+}
+
+// &__header  => .z-button__header
+@mixin e($element) {
+  @at-root {
+    #{& + $element-separator + $element} {
+      @content;
+    }
+  }
+}
+
+@mixin button-variant($color, $background-color, $border-color) {
+  color: $color;
+  background: $background-color;
+  border-color: $border-color;
+  &:hover {
+    background-color: lighten($background-color, 10%);
+  }
+  &:active {
+    background-color: darken($background-color, 10%);
+  }
+  &.disabled,
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $background; // Same background as the default
+    color: $color; // Same text color as the default
+    border-color: $border-color; // Same border color as the default
+
+    // Ensure hover and active states do not change the appearance
+    &:hover,
+    &:active {
+      background-color: $background;
+      color: $color;
+      border-color: $border-color;
+    }
+  }
+}

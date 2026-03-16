@@ -1,0 +1,56 @@
+# Dialog对话框
+
+1. 显示对话框时显示遮罩层
+2. 对话框始终浮现在页面的最上层，不受绝对定位的影响
+
+## 基础用法
+
+:::demo
+
+```vue
+<template>
+  <zt-button type="primary" @click="dialogVisible = true">按钮</zt-button>
+  <zt-dialog v-model="dialogVisible" title="Tips" :before-close="handleClose">
+    <span>This is a message</span>
+    <template #footer>
+      <div class="dialog-footer">
+        <zt-button @click="dialogVisible = false" size="small">Cancel</zt-button>
+        <zt-button type="primary" @click="dialogVisible = false" size="small">Confirm</zt-button>
+      </div>
+    </template>
+  </zt-dialog>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue';
+const dialogVisible = ref(false);
+const handleClose = (done: () => void) => {
+  alert('确认关闭哦');
+  done();
+};
+</script>
+
+```
+:::
+#### 属性
+
+| 属性名                | 说明                                                                                           | 类型                                                                  | 可选值 | 默认值 |
+| :-------------------- | :--------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- | :----- | :----- |
+| model-value / v-model | 是否显示 Dialog                                                                                | `boolean`                                                             | —      | —      |
+| title                 | Dialog 对话框 Dialog 的标题， 也可通过具名 slot 传入                                           | `string`                                                              | —      | —      |
+| before-close          | 关闭前的回调，会暂停 Dialog 的关闭. 回调函数内执行 done 参数方法的时候才是真正关闭对话框的时候 | `Function`(done: () => void) => void (done是一个函数 用来关闭 Dialog) | —      | —      |
+
+#### 插槽
+
+| 插槽名  | 说明                                          |
+| :------ | :-------------------------------------------- |
+| default | Dialog 的内容                                 |
+| header  | 对话框标题的内容；会替换属性传入的title部分。 |
+| footer  | Dialog 按钮操作区的内容                       |
+
+#### 事件
+
+| 事件名 | 说明              | 参数 |
+| :----- | :---------------- | :--- |
+| open   | Dialog 打开的回调 | —    |
+| close  | Dialog 关闭的回调 | —    |
