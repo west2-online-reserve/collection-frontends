@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用户登录 & 文件管理</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    form {
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-top: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #loginForm button {
+      width: 100%;
+    }
+    #uploadForm button {
+      width: auto;
+      display: flex;
+      background-color: #28a745;
+      margin-left: auto;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      margin-top: 10px;
+      color: green;
+      text-align: center;
+    }
+    .error {
+      margin-top: 10px;
+      color: red;
+      text-align: center;
+    }
+    .file-list {
+      list-style: none;
+      padding: 0;
+    }
+    .file-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .file-list li:last-child {
+      border-bottom: none;
+    }
+    .file-list button {
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .file-list button:hover {
+      background-color: #e04344;
+    }
+    .logout-link {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .logout-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .logout-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>文件管理系统</h1>
+
+  <!-- 注销链接（登录后显示） -->
+  <div class="logout-link" id="logoutLink" style="display:none">
+    已登录，<a href="#" id="logoutBtn">退出登录</a>
+  </div>
+
+  <!-- 登录表单（登录前显示） -->
+  <form id="loginForm">
+    <h2>用户登录</h2>
+    <label>
+      用户名：
+      <input type="text" id="loginUsername" placeholder="请输入用户名" required />
+    </label>
+    <label>
+      密码：
+      <input type="password" id="loginPassword" placeholder="请输入密码" required />
+    </label>
+    <button type="submit">登录</button>
+    <div id="loginMsg" class="message"></div>
+    <div id="loginError" class="error"></div>
+    <div style="margin-top:12px; text-align:center;">
+      <a href="register.html">还没账号？去注册</a>
+    </div>
+  </form>
+
+  <!-- 上传表单（仅登录后显示） -->
+  <form id="uploadForm" style="display:none">
+    <h2>上传文件</h2> 
+    <input type="file" id="fileInput" name="file" />
+    <button id="upload" type="submit">上传</button>
+    <div id="uploadMsg" class="message"></div>
+    <div id="uploadError" class="error"></div>
+  </form>
+
+  <!-- 文件列表（仅登录后显示） -->
+  <section id="filesSection" style="display:none">
+    <h2>已上传文件</h2>
+    <ul id="fileList" class="file-list"></ul>
+    <div id="listError" class="error"></div>
+  </section>
+
+  <script>
+    // ----------------------
+    // 元素引用
+    // ----------------------
+    const loginForm    = document.getElementById('loginForm');
+    const loginUsername= document.getElementById('loginUsername');
+    const loginPassword= document.getElementById('loginPassword');
+    const loginMsg     = document.getElementById('loginMsg');
+    const loginError   = document.getElementById('loginError');
+
+    const logoutLink   = document.getElementById('logoutLink');
+    const logoutBtn    = document.getElementById('logoutBtn');
+
+    const uploadForm   = document.getElementById('uploadForm');
+    const fileInput    = document.getElementById('fileInput');
+    const uploadMsg    = document.getElementById('uploadMsg');
+    const uploadError  = document.getElementById('uploadError');
+
+    const filesSection = document.getElementById('filesSection');
+    const fileList     = document.getElementById('fileList');
+    const listError    = document.getElementById('listError');
+
+    let jwtToken = localStorage.getItem('jwt_token') || null;
+
+    // ----------------------
+    // 页面初始化
+    // ----------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      if (jwtToken) {
+        // 如果本地已有 token，就直接显示上传 & 文件列表区域
+        showAuthenticatedUI();
+        loadFileList();
+      } else {
+        showLoginUI();
+      }
+    });
+
+    // ----------------------
+    // 显示登录相关 UI
+    // ----------------------
+    function showLoginUI() {
+      loginForm.style.display    = 'block';
+      uploadForm.style.display   = 'none';
+      filesSection.style.display = 'none';
+      logoutLink.style.display   = 'none';
+    }
+
+    // ----------------------
+    // 显示已登录后的 UI
+    // ----------------------
+    function showAuthenticatedUI() {
+      loginForm.style.display    = 'none';
+      uploadForm.style.display   = 'block';
+      filesSection.style.display = 'block';
+      logoutLink.style.display   = 'block';
+      loginMsg.textContent       = '';
+      loginError.textContent     = '';
+    }
+
+    // ----------------------
+    // 注销操作
+    // ----------------------
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('jwt_token');
+      jwtToken = null;
+      showLoginUI();
+      fileList.innerHTML = '';
+    });
+
+    // ----------------------
+    // 登录事件
+    // ----------------------
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginMsg.textContent   = '';
+      loginError.textContent = '';
+
+      const username = loginUsername.value.trim();
+      const password = loginPassword.value.trim();
+      if (!username || !password) {
+        loginError.textContent = '用户名和密码不能为空';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '登录失败');
+        }
+        jwtToken = data.token;
+        localStorage.setItem('jwt_token', jwtToken);
+        loginMsg.textContent = '登录成功';
+        loginUsername.value = '';
+        loginPassword.value = '';
+        // 切换 UI
+        showAuthenticatedUI();
+        // 加载文件列表
+        loadFileList();
+      } catch (err) {
+        loginError.textContent = err.message;
+      }
+    });
+
+    // ----------------------
+    // 上传事件
+    // ----------------------
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      uploadMsg.textContent   = '';
+      uploadError.textContent = '';
+
+      const file = fileInput.files[0];
+      if (!file) {
+        uploadError.textContent = '请先选择一个文件';
+        return;
+      }
+      if (!jwtToken) {
+        uploadError.textContent = '请先登录';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken
+          },
+          body: formData
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '上传失败');
+        }
+        uploadMsg.textContent = `上传成功：${data.original} → ${data.filename}`;
+        fileInput.value = '';
+        // 刷新文件列表
+        loadFileList();
+      } catch (err) {
+        uploadError.textContent = err.message;
+      }
+    });
+
+    // ----------------------
+    // 删除文件函数
+    // ----------------------
+    async function deleteFile(filename) {
+      if (!jwtToken) {
+        alert('请先登录');
+        return;
+      }
+      if (!confirm(`确定要删除 "${filename}" 吗？`)) return;
+
+      try {
+        const res = await fetch('/api/delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwtToken
+          },
+          body: JSON.stringify({ filename })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '删除失败');
+        }
+        // 刷新列表
+        loadFileList();
+      } catch (err) {
+        alert(`删除失败：${err.message}`);
+      }
+    }
+
+    // ----------------------
+    // 获取并渲染文件列表（仅登录后调用）
+    // ----------------------
+    async function loadFileList() {
+      fileList.innerHTML = '';
+      listError.textContent = '';
+
+      if (!jwtToken) {
+        listError.textContent = '请先登录，才能查看文件列表';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/files', {
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken
+          }
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '获取列表失败');
+        }
+
+        if (data.files.length === 0) {
+          fileList.innerHTML = '<li>暂无文件</li>';
+          return;
+        }
+
+        data.files.forEach(item => {
+          const li = document.createElement('li');
+          // 文件链接
+          const a = document.createElement('a');
+          a.href = item.url;
+          a.textContent = item.filename;
+          a.target = '_blank';
+          // 删除按钮
+          const btn = document.createElement('button');
+          btn.textContent = '删除';
+          btn.onclick = () => deleteFile(item.filename);
+          li.appendChild(a);
+          li.appendChild(btn);
+          fileList.appendChild(li);
+        });
+      } catch (err) {
+        listError.textContent = err.message;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用户注册</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 6px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      margin-top: 12px;
+      color: green;
+      text-align: center;
+    }
+    .error {
+      margin-top: 12px;
+      color: red;
+      text-align: center;
+    }
+    .link-login {
+      margin-top: 16px;
+      text-align: center;
+    }
+    .link-login a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .link-login a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>用户注册</h1>
+
+  <form id="registerForm">
+    <label>
+      用户名：
+      <input type="text" id="regUsername" placeholder="请输入用户名" required />
+    </label>
+    <label>
+      密码：
+      <input type="password" id="regPassword" placeholder="请输入密码" required />
+    </label>
+    <button type="submit">注册</button>
+    <div id="regMessage" class="message"></div>
+    <div id="regError" class="error"></div>
+  </form>
+
+  <div class="link-login">
+    已有账号？<a href="login.html">去登录</a>
+  </div>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const regUsername   = document.getElementById('regUsername');
+    const regPassword   = document.getElementById('regPassword');
+    const regMessage    = document.getElementById('regMessage');
+    const regError      = document.getElementById('regError');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      regMessage.textContent = '';
+      regError.textContent = '';
+
+      const username = regUsername.value.trim();
+      const password = regPassword.value.trim();
+      if (!username || !password) {
+        regError.textContent = '用户名和密码不能为空';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '注册失败');
+        }
+        regMessage.textContent = '注册成功，正在跳转到登录页面…';
+        // 2 秒后跳转到登录页
+        setTimeout(() => { location.href = 'login.html'; }, 2000);
+      } catch (err) {
+        regError.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+</html>
