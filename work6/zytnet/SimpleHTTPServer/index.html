@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文件管理</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .container {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .section {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type="file"] {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    button {
+      background: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
+    button:hover {
+      background: #3367d6;
+    }
+
+    button.delete {
+      background: #ea4335;
+    }
+
+    button.delete:hover {
+      background: #d32f2f;
+    }
+
+
+    .file-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .url-box {
+      background: #e8f0fe;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      word-break: break-all;
+    }
+
+    .error {
+      color: #d93025;
+      background: #fce8e6;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: #0f9d58;
+      background: #e6f4ea;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    .login-form {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>文件管理系统</h1>
+
+    <!-- 登录区域 -->
+    <div class="section login-form">
+      <h2>登录</h2>
+      <div class="form-group">
+        <label for="userId">用户 ID：</label>
+        <input type="text" id="userId">
+      </div>
+      <div class="form-group">
+        <label for="password">密码：</label>
+        <input type="password" id="password">
+      </div>
+      <button id="loginBtn">登录</button>
+      <div id="loginResult"></div>
+    </div>
+
+    <!-- 文件上传区域 -->
+    <div class="section">
+      <h2>上传文件</h2>
+      <div class="form-group">
+        <label for="fileInput">选择文件：</label>
+        <input type="file" id="fileInput">
+      </div>
+      <button id="uploadBtn" disabled>上传文件</button>
+      <div id="uploadResult"></div>
+    </div>
+
+    <!-- 文件列表区域 -->
+    <div class="section">
+      <h2>文件列表</h2>
+      <button id="refreshBtn">刷新列表</button>
+      <ul id="fileList" class="file-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    // DOM元素
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const fileList = document.getElementById('fileList');
+    const uploadResult = document.getElementById('uploadResult');
+    const userIdInput = document.getElementById('userId');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginResult = document.getElementById('loginResult');
+
+    let token = null;
+    //初始url
+    const baseUrl='http://localhost:3000';
+
+    // 显示消息
+    function showMessage(element, message, isError = false) {
+      element.innerHTML = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+      setTimeout(() => element.innerHTML = '', 3000);
+    }
+
+    // 登录
+    loginBtn.addEventListener('click', async () => {
+      const userId = userIdInput.value;
+      const password = passwordInput.value;
+
+      if (!userId || !password) {
+        showMessage(loginResult, '请输入用户 ID 和密码', true);
+        return;
+      }
+
+      try {
+        console.log(`login with ${userId} and ${password}`);
+        const response = await fetch(`/api/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          token = result.token;
+          showMessage(loginResult, '登录成功');
+          uploadBtn.disabled = false;
+          refreshFileList();
+        } else {
+        console.error(result.error);
+          showMessage(loginResult, `登录失败：${result.error}`, true);
+          uploadBtn.disabled = true;
+        }
+      } catch (error) {
+        console.error(result.error);
+        showMessage(loginResult, `网络错误：${error.message}`, true);
+        uploadBtn.disabled = true;
+      }
+    });
+
+    // 上传文件
+    uploadBtn.addEventListener('click', async () => {
+      if (!fileInput.files.length) {
+        showMessage(uploadResult, '请选择文件', true);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const response = await fetch(`/api/upload`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showMessage(uploadResult,
+            `上传成功！<br>保存为：${result.savedName}<br>
+           `);
+          refreshFileList();
+        } else {
+          showMessage(uploadResult, `错误：${result.error}`, true);
+        }
+      } catch (error) {
+        showMessage(uploadResult, `网络错误：${error.message}`, true);
+      }
+    });
+
+    // 刷新文件列表
+    async function refreshFileList() {
+      if (!token) {
+        fileList.innerHTML = '<li>请先登录</li>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/files`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const files = await response.json();
+
+        if (response.ok) {
+          if (files.length === 0) {
+            fileList.innerHTML = '<li>没有文件</li>';
+            return;
+          }
+
+          fileList.innerHTML = files.map(file => `
+            <li class="file-item">
+              <div>
+                <strong>${file.name}</strong><br>
+                原文件名：${file.originalName}<br>
+                上传用户：${file.uploadedBy}<br>
+                上传时间：${new Date(file.uploadedAt).toLocaleString()}<br>
+                <div class="url-box">
+                  <a href="${file.url}" target="_blank">${file.url}</a>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button class="delete" onclick="deleteFile('${file.name}')">删除</button>
+              </div>
+            </li>
+          `).join('');
+        } else {
+          fileList.innerHTML = `<li>加载失败：${files.error}</li>`;
+        }
+      } catch (error) {
+        fileList.innerHTML = `<li>网络错误：${error.message}</li>`;
+      }
+    }
+
+    // 删除文件
+    window.deleteFile = async function (filename) {
+      if (!confirm(`确定要删除 ${filename} 吗？`)) return;
+
+      if (!token) {
+        alert('请先登录');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/delete/${filename}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          refreshFileList();
+        } else {
+          const result = await response.json();
+          alert(`删除失败：${result.error}`);
+        }
+      } catch (error) {
+        alert(`网络错误：${error.message}`);
+      }
+    }
+
+    // 初始加载文件列表
+    document.addEventListener('DOMContentLoaded', refreshFileList);
+    refreshBtn.addEventListener('click', refreshFileList);
+  </script>
+</body>
+
+</html>

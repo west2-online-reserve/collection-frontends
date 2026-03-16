@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>demo3-2</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        margin: 0;
+      }
+      .show {
+        text-align: center;
+        font-weight: bold;
+      }
+      .question {
+        padding-top: 180px;
+        padding-bottom: 20px;
+        font-family: 'Arial', sans-serif;
+        color: #0092f4;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="question">What is my IP address?</h1>
+    <p class="show">IP address: <span id="ip">Loading...</span></p>
+    <p class="show">Location: <span id="location"></span></p>
+
+    <script>
+      // 请在此处完成你的代码
+      fetch("https://myip.ipip.net/json")
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("ip").textContent = data.data.ip;
+        document.getElementById("location").textContent = data.data.location;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        document.getElementById("ip").textContent = "failed...";
+        document.getElementById("location").textContent = "failed...";
+      });
+
+      /*每个元素都可以有一个唯一的id,
+      使用id选择器可以直接获取到对应的元素，
+      而不需要考虑其它的内容。
+      方便更改填充的内容*/
+    </script>
+  </body>
+</html>
