@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/markdown-it": "^13.0.7"
+  }
+}
