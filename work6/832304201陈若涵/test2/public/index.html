@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Server</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #fileList {
+        list-style-type: none;
+        padding: 0;
+      }
+      #fileList li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+      }
+      #fileList li:last-child {
+        border-bottom: none;
+      }
+      .delete-btn {
+        background-color: #f44336;
+      }
+      .delete-btn:hover {
+        background-color: #d32f2f;
+      }
+      .file-link {
+        color: #2196f3;
+        text-decoration: none;
+      }
+      .file-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>File Server</h1>
+
+    <div class="section">
+      <h2>Upload File</h2>
+      <input type="file" id="fileInput" />
+      <button onclick="uploadFile()">Upload</button>
+      <div id="uploadResult"></div>
+    </div>
+
+    <div class="section">
+      <h2>File List</h2>
+      <button onclick="fetchFiles()">Refresh List</button>
+      <ul id="fileList"></ul>
+    </div>
+
+    <script>
+      const baseUrl = "http://localhost:3000";
+
+      async function uploadFile() {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please select a file");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const response = await fetch(`${baseUrl}/api/upload`, {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById("uploadResult").innerHTML = `
+            <p>File uploaded successfully!</p>
+            <p>URL: <a href="${result.url}" target="_blank">${result.url}</a></p>
+          `;
+            fetchFiles();
+          } else {
+            document.getElementById("uploadResult").innerHTML = `
+            <p style="color: red;">Error: ${result.error}</p>
+          `;
+          }
+        } catch (error) {
+          document.getElementById("uploadResult").innerHTML = `
+          <p style="color: red;">Error: ${error.message}</p>
+        `;
+        }
+      }
+
+      async function fetchFiles() {
+        try {
+          const response = await fetch(`${baseUrl}/api/files`);
+          const data = await response.json();
+
+          if (response.ok) {
+            const fileList = document.getElementById("fileList");
+            fileList.innerHTML = "";
+
+            if (data.files.length === 0) {
+              fileList.innerHTML = "<li>No files found</li>";
+              return;
+            }
+
+            data.files.forEach((file) => {
+              const li = document.createElement("li");
+              li.innerHTML = `
+              <a href="${file.url}" class="file-link" target="_blank">${file.name}</a>
+              <button class="delete-btn" onclick="deleteFile('${file.name}')">Delete</button>
+            `;
+              fileList.appendChild(li);
+            });
+          } else {
+            alert(`Error: ${data.error}`);
+          }
+        } catch (error) {
+          alert(`Error: ${error.message}`);
+        }
+      }
+
+      async function deleteFile(filename) {
+        if (!confirm(`Are you sure you want to delete ${filename}?`)) {
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${baseUrl}/api/delete?filename=${encodeURIComponent(filename)}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(result.message);
+            fetchFiles();
+          } else {
+            alert(`Error: ${result.error}`);
+          }
+        } catch (error) {
+          alert(`Error: ${error.message}`);
+        }
+      }
+
+      // 初始加载文件列表
+      fetchFiles();
+    </script>
+  </body>
+</html>
