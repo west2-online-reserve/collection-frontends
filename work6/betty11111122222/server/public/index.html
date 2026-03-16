@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koa 文件服务器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .file-list {
+      margin-top: 10px;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .file-item:last-child {
+      border-bottom: none;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button.danger {
+      background-color: #f44336;
+    }
+    button.danger:hover {
+      background-color: #d32f2f;
+    }
+    .progress-container {
+      margin-top: 10px;
+      display: none;
+    }
+    progress {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Koa 文件服务器</h1>
+    
+    <div class="section">
+      <h2>上传文件</h2>
+      <input type="file" id="fileInput">
+      <button onclick="uploadFile()">上传</button>
+      <div class="progress-container" id="uploadProgress">
+        <progress value="0" max="100"></progress>
+        <p id="uploadStatus"></p>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>文件列表</h2>
+      <button onclick="refreshFileList()">刷新列表</button>
+      <div class="file-list" id="fileList"></div>
+    </div>
+  </div>
+
+  <script>
+    // 上传文件
+    async function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert('请选择文件');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const progressContainer = document.getElementById('uploadProgress');
+      const progressBar = progressContainer.querySelector('progress');
+      const statusText = document.getElementById('uploadStatus');
+      
+      progressContainer.style.display = 'block';
+      progressBar.value = 0;
+      statusText.textContent = '准备上传...';
+      
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/upload', true);
+        
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            progressBar.value = percent;
+            statusText.textContent = `上传中: ${percent}%`;
+          }
+        };
+        
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            statusText.textContent = `上传成功: ${response.originalName}`;
+            refreshFileList();
+          } else {
+            const error = JSON.parse(xhr.responseText).error || '上传失败';
+            statusText.textContent = `错误: ${error}`;
+          }
+        };
+        
+        xhr.onerror = () => {
+          statusText.textContent = '上传过程中发生错误';
+        };
+        
+        xhr.send(formData);
+      } catch (err) {
+        console.error('上传错误:', err);
+        statusText.textContent = '上传失败: ' + err.message;
+      }
+    }
+    
+    // 刷新文件列表
+    async function refreshFileList() {
+      const fileList = document.getElementById('fileList');
+      fileList.innerHTML = '<p>加载中...</p>';
+      
+      try {
+        const response = await fetch('/api/files');
+        if (!response.ok) {
+          throw new Error('获取文件列表失败');
+        }
+        
+        const data = await response.json();
+        
+        if (data.files.length === 0) {
+          fileList.innerHTML = '<p>没有文件</p>';
+          return;
+        }
+        
+        fileList.innerHTML = '';
+        data.files.forEach(file => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+          
+          const fileInfo = document.createElement('div');
+          fileInfo.innerHTML = `
+            <strong>${file.name}</strong>
+            <br>
+            <small>大小: ${formatFileSize(file.size)}</small>
+            <br>
+            <small>修改时间: ${new Date(file.mtime).toLocaleString()}</small>
+          `;
+          
+          const fileActions = document.createElement('div');
+          fileActions.style.display = 'flex';
+          fileActions.style.gap = '8px';
+          
+          const downloadBtn = document.createElement('button');
+          downloadBtn.textContent = '下载';
+          downloadBtn.onclick = () => window.open(file.url, '_blank');
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = '删除';
+          deleteBtn.className = 'danger';
+          deleteBtn.onclick = () => deleteFile(file.name);
+          
+          fileActions.appendChild(downloadBtn);
+          fileActions.appendChild(deleteBtn);
+          
+          fileItem.appendChild(fileInfo);
+          fileItem.appendChild(fileActions);
+          fileList.appendChild(fileItem);
+        });
+      } catch (err) {
+        console.error('获取文件列表错误:', err);
+        fileList.innerHTML = `<p style="color:red">错误: ${err.message}</p>`;
+      }
+    }
+    
+    // 删除文件
+    async function deleteFile(filename) {
+      if (!confirm(`确定要删除文件 "${filename}" 吗？`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/delete?filename=${encodeURIComponent(filename)}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+          throw new Error('删除文件失败');
+        }
+        
+        alert('文件已删除');
+        refreshFileList();
+      } catch (err) {
+        console.error('删除文件错误:', err);
+        alert(`删除失败: ${err.message}`);
+      }
+    }
+    
+    // 格式化文件大小
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // 初始化加载文件列表
+    document.addEventListener('DOMContentLoaded', refreshFileList);
+  </script>
+</body>
+</html>

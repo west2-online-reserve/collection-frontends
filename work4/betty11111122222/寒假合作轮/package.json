@@ -1,0 +1,36 @@
+{
+  "name": "step4",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build"
+  },
+  "dependencies": {
+    "@kangc/v-md-editor": "^2.3.18",
+    "@primeuix/themes": "^1.0.0",
+    "axios": "^1.8.1",
+    "markdown-it": "^14.1.0",
+    "mavon-editor": "^2.10.4",
+    "primevue": "^4.3.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.13.4",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "npm-run-all2": "^7.0.2",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-vue-devtools": "^7.7.2",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue-tsc": "^2.2.2"
+  }
+}
