@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>demo3-2</title>
+    <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #9edfb6 0%, #007465 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+  }
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+  }
+  p {
+    font-size: 18px;
+    margin: 15px 0;
+    color: #555;
+  }
+  span {
+    font-weight: bold;
+    color: #116854;
+    background: #e8fcf3;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+  .loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #116854;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+  </head>
+
+  <body>
+    <div class="card">
+    <h1>What is my IP address?</h1>
+    <p>IP address: <span id="ip">Loading...</span></p>
+    <p>Location: <span id="location"></span></p>
+    </div>
+    <script>
+      fetch('https://myip.ipip.net/json')
+  .then(response => response.json())
+  .then(data => {
+    if (data && data.ret === 'ok') {
+      const ipData = data.data;
+      document.getElementById('ip').textContent = ipData.ip;
+      const locationText = ipData.location.filter(part => part).join(' ');
+      document.getElementById('location').textContent = locationText || '未知';
+    } else {
+      document.getElementById('ip').textContent = '获取失败';
+      document.getElementById('location').textContent = '无法获取位置信息';
+    }
+  })
+  .catch(error => {
+    console.error('请求失败:', error);
+    document.getElementById('ip').textContent = '请求失败，请检查网络';
+    document.getElementById('location').textContent = '无法获取位置信息';
+  });
+    </script>
+  </body>
+</html>

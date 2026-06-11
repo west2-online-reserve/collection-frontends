@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f0f7ff;
+    color: #333;
+}
+
+.navbar {
+    background-color: #74b6ec;
+    padding: 25px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+}
+
+.navbar a {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 25px;
+    margin: 0 75px;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #3a3594;
+    color: white;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.introduction {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #333;
+}
+
+.introduction img {
+    width: 200px;
+    border-radius: 20px;
+}
+
+.introduction p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+}
+
+.card-list {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.card {
+    flex: 1;
+    background: #deecff;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    color: #13105d;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #355894;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.card img {
+    width: 120%;
+    max-width: 150px;
+    border-radius: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #74b6ec;
+    color: #333;
+}
+
+td {
+    background-color: #f0f7ff;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #5a5a5a;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: vertical;
+}
+
+button {
+    background-color: #74b6ec;
+    color: #333;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #3a3594;
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    padding: 25px;
+    background-color: #333;
+    color: white;
+}
+
+.footer a {
+    color: #3a3594;
+    text-decoration: none;
+}
