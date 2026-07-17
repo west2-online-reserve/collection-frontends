@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple HTTP File Server</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 20px; color: #333; }
+    .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card h2 { margin-bottom: 12px; font-size: 18px; color: #555; }
+    input, button { padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+    button { background: #4a90d9; color: #fff; border: none; cursor: pointer; margin-top: 8px; }
+    button:hover { background: #357abd; }
+    button.danger { background: #e74c3c; }
+    button.danger:hover { background: #c0392b; }
+    .file-list { list-style: none; }
+    .file-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+    .file-list li:last-child { border-bottom: none; }
+    .file-info a { color: #4a90d9; text-decoration: none; word-break: break-all; }
+    .status { padding: 8px 12px; border-radius: 6px; margin-top: 8px; font-size: 13px; display: none; }
+    .status.success { display: block; background: #d4edda; color: #155724; }
+    .status.error { display: block; background: #f8d7da; color: #721c24; }
+    .login-status { text-align: right; font-size: 13px; color: #888; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>📁 Simple HTTP File Server</h1>
+  <div class="login-status" id="loginStatus">未登录</div>
+
+  <!-- 登录 -->
+  <div class="card" id="loginCard">
+    <h2>🔐 登录</h2>
+    <input id="username" placeholder="用户名 (admin)" />
+    <input id="password" type="password" placeholder="密码 (admin123)" style="margin-top:8px"/>
+    <button onclick="login()">登录</button>
+    <div id="loginMsg" class="status"></div>
+  </div>
+
+  <!-- 上传 -->
+  <div class="card">
+    <h2>⬆️ 上传文件</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">上传</button>
+    <div id="uploadMsg" class="status"></div>
+  </div>
+
+  <!-- 文件列表 -->
+  <div class="card">
+    <h2>📋 文件列表 <button style="font-size:12px;padding:4px 10px;margin-left:10px" onclick="loadFiles()">刷新</button></h2>
+    <ul class="file-list" id="fileList"><li>加载中...</li></ul>
+  </div>
+</div>
+
+<script>
+  let token = localStorage.getItem('token') || '';
+  updateLoginStatus();
+
+  function updateLoginStatus() {
+    document.getElementById('loginStatus').textContent = token ? `✅ 已登录` : '❌ 未登录';
+    document.getElementById('loginCard').style.display = token ? 'none' : 'block';
+  }
+
+  function showMsg(id, msg, isError) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'status ' + (isError ? 'error' : 'success');
+    setTimeout(() => el.className = 'status', 4000);
+  }
+
+  async function login() {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      token = data.token;
+      localStorage.setItem('token', token);
+      updateLoginStatus();
+      showMsg('loginMsg', '登录成功！', false);
+    } else {
+      showMsg('loginMsg', data.error, true);
+    }
+  }
+
+  async function uploadFile() {
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return showMsg('uploadMsg', '请选择文件', true);
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: form
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showMsg('uploadMsg', `上传成功！URL: ${data.url}`, false);
+      loadFiles();
+    } else {
+      showMsg('uploadMsg', data.error, true);
+    }
+  }
+
+  async function loadFiles() {
+    const res = await fetch('/api/files');
+    const files = await res.json();
+    const list = document.getElementById('fileList');
+    if (files.length === 0) {
+      list.innerHTML = '<li style="color:#999">暂无文件</li>';
+      return;
+    }
+    list.innerHTML = files.map(f => `
+      <li>
+        <div class="file-info">
+          <a href="${f.url}" target="_blank">${f.original_name}</a>
+          <div style="font-size:12px;color:#999">${(f.size/1024).toFixed(1)} KB · ${f.created_at}</div>
+        </div>
+        <button class="danger" style="font-size:12px;padding:4px 10px" onclick="deleteFile('${f.stored_name}')">删除</button>
+      </li>
+    `).join('');
+  }
+
+  async function deleteFile(storedName) {
+    if (!confirm('确定删除该文件？')) return;
+    const res = await fetch('/api/delete', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ filename: storedName })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      loadFiles();
+    } else {
+      alert(data.error);
+    }
+  }
+
+  // 初始加载
+  loadFiles();
+</script>
+</body>
+</html>
