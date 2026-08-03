@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>demo3-2</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        margin: 0;
+        padding:20px;
+        font-family:'Times New Roman', Times, serif;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        height:100vh;
+      }
+
+      #card {
+        background-color: rgb(237, 233, 229);
+        border:1px solid rgba(0,0,0,0.05);
+        border-radius: 10px;
+        padding:25px;
+        max-width:400px;
+        width:100%;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        transition: 0.3s;
+      }
+
+      #card:hover{
+        box-shadow:0 2px 8px rgba(0,0,0,0.15);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="card">
+      <h1>What is my IP address?</h1>
+      <p>IP address: <span id="ip">Loading...</span></p>
+      <p>Location: <span id="location"></span></p>
+    </div>
+
+    <script>
+      const ip=document.getElementById('ip');
+      const loc=document.getElementById('location');
+
+      getData();
+
+      async function getData(){
+        try{
+          const response=await fetch('https://myip.ipip.net/json');
+          const data=await response.json();
+          if(data.ret!=='ok'){
+            throw new Error('接口出错');
+          }
+
+          const information=data.data.location;
+          const country=information[0] || '';
+          const province=information[1] || '';
+          const city=information[2] || '';
+
+          ip.textContent=data.data.ip;
+          if(city && city===province){
+            loc.textContent=country+' '+province;
+          }else{
+            loc.textContent=country+' '+province+' '+city;
+          }
+
+        }catch(error){
+          console.error('获取IP信息失败',error);
+          ip.textContent='加载失败';
+          loc.textContent='';
+        }
+      }
+    </script>
+  </body>
+</html>

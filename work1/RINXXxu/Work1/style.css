@@ -1,0 +1,108 @@
+        *{
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #dcf3ff;
+            padding: 25px 100px;
+        }
+
+        div {
+            padding: 25px;
+        }
+
+        a{
+            text-decoration:none;
+            color:black;
+        }
+
+        .clearfix {
+            overflow: auto;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 150px;
+        }
+
+        #box0 {
+            border: 2px solid #9bbbde;
+            border-radius: 10px;
+        }
+
+        #box1 {
+            background-color: #f8cf37;
+            border-radius: 10px;
+            color: white;
+            height: 140px;
+            padding-top: 5px;
+        }
+
+        #box2 {
+            background-color: #d08079;
+            border-radius: 10px;
+            color: white;
+            height: 140px;
+            padding-top: 5px;
+        }
+
+        #box3 {
+            background-color: #385f98;
+            border-radius: 10px;
+            color: white;
+            height: 140px;
+            padding-top: 5px;
+        }
+
+        #section2 {
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            border-collapse:collapse;
+        }
+
+        #section2 th,#section2 td {
+            padding: 6px;
+        }
+
+        #section3 {
+            margin-top: 30px;
+            border: 2px solid #b9e4f8;
+            border-radius: 10px;
+            min-height: 180px;
+            width:100%;
+            font-size:17px;
+        }
+
+        #input {
+            width: 100%;
+            min-height: 180px;
+            border: none;
+            background-color: transparent;
+            outline: none;
+            resize: none;
+            font-size:17px;
+        }
+
+        .wrapper {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #submit-btn {
+            background-color: #6495ed;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 40px;
+            color: white;
+            cursor: pointer;
+        }

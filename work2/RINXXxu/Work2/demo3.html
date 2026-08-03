@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+    <style>
+      button {
+        text-decoration: none;
+        background: #2f435e;
+        color: #f2f2f2;
+
+        padding: 10px 30px 10px 30px;
+        font-size: 16px;
+        font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
+        font-weight: bold;
+        border-radius: 3px;
+
+        -webkit-transition: all linear 0.3s;
+        -moz-transition: all linear 0.3s;
+        transition: all linear 0.3s;
+      }
+
+      .wra {
+        background-color: gray;
+        width: 190px;
+        text-align: center;
+        height: 120px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="wra">
+        <h3>你觉得你点得到我吗</h3>
+        <button class="yes">能</button>
+        <button class="no">不能</button>
+      </div>
+    </div>
+
+    <script>
+
+      const runner=document.querySelector('.wra');
+      let BoxX=0;
+      let BoxY=0;
+      let yesCount=0;
+      let noCount=0;
+
+      const limit=200;
+      let speed=50;
+
+      document.addEventListener("mousemove",mouseMove);
+      function mouseMove(e){
+        const mouseX=e.clientX;
+        const mouseY=e.clientY;
+
+        const dx=window.innerWidth/2+BoxX-mouseX;
+        const dy=window.innerHeight/2+BoxY-mouseY;
+        const d=Math.sqrt(dx*dx+dy*dy);
+
+        if(d<limit){
+          const normX=dx/d;
+          const normY=dy/d;
+          const a=(limit-d)/limit;
+          BoxX+=normX*speed*a;
+          BoxY+=normY*speed*a;
+          
+          BoxX=Math.max(95-window.innerWidth/2,Math.min(window.innerWidth/2-95,BoxX));
+          BoxY=Math.max(60-window.innerHeight/2,Math.min(window.innerHeight/2-60,BoxY));
+        }
+
+        runner.style.marginLeft=BoxX+'px';
+        runner.style.marginTop=BoxY+'px';
+      }  
+
+      const yes=document.querySelector('.yes');
+      const no=document.querySelector('.no');
+
+      yes.addEventListener('click',Yes);
+      no.addEventListener('click',No);
+      function Yes(){
+        if(noCount!==0 && yesCount===0){
+          alert("这么多次才点到，真菜");
+        }else if(speed>=100){
+          alert("二倍速就这！");
+        }else{
+          alert("上次有人点到还是在上次");
+        }
+        yesCount++;
+        speed+=10;
+      }
+      function No(){
+        if(noCount>2 && yesCount===0){
+          alert("菜就多练");
+          speed+=20;
+        }else{
+          alert("还没点到，别玩了");
+        }
+        noCount++;
+      }
+
+    </script>
+  </body>
+</html>
