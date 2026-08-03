@@ -21,5 +21,6 @@ JavaScript和C++一样具有“面向对象”特性，代码思路上或许是�
 07.24  
 推进demo2进度。在ds老师的帮助下完成了demo2:拼写错误多发，需要注意。  
 > Hey kids,spelling is fun!  
+
 07.25  
 推进demo3进度。依旧在ds老师的帮助下完成了demo3，对querySelector的用法更熟练了。首次提出了创新点，向Honkai:StarRailway的SilverWolf老师学习了游戏难度修改与台词一句。
